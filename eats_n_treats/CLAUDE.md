@@ -66,6 +66,7 @@ As the workshop progresses, the architecture will evolve to demonstrate:
 - **Event Flow Testing**: Verifying event sequences
 - **State Transition Testing**: Given-When-Then with events
 - **Behavior-Driven Development**: Testing domain logic through events
+- **Policy Testing**: Testing reactive policies and process managers with Given-WhenEvent-ThenExpectCommands pattern
 
 ### CQRS (Command Query Responsibility Segregation)
 - **Command Models**: Write-optimized domain models
@@ -128,6 +129,52 @@ The "Eats N Treats" domain involves a food ordering/delivery system, providing r
 - Delivery coordination (sagas)
 - Customer history (projections, temporal queries)
 - Business analytics (event replay, read models)
+
+## Testing Patterns
+
+### Command Testing (Aggregate Tests)
+Tests for aggregates that validate commands and produce events.
+**Pattern**: `Given(events) → When(command) → Then(events)`
+
+**Example**:
+```csharp
+Given(OrderPlaced(Order1(), Marco()));
+When(AddItem(Order1(), Pizza(), 2, 12.99m));
+Then(ItemAdded(Order1(), Pizza(), 2, 12.99m));
+```
+
+**Location**: `eats_n_treats.tests/Orders/OrderTests.cs`
+
+**Use when**: Testing aggregate business logic, command validation, and state transitions.
+
+### Policy Testing (Process Manager Tests)
+Tests for policies that react to events and emit commands to coordinate cross-aggregate processes.
+**Pattern**: `Given(events) → when_event_occurs(event) → then_expect_commands(commands)`
+
+**Example**:
+```csharp
+Given(OrderPlaced(Order1(), Marco()));
+when_event_occurs(ItemAddedToOrder(Order1(), Pizza(), 2, 12.99m));
+then_expect_commands(ReserveInventory(Order1(), Pizza(), 2));
+```
+
+**Location**: `eats_n_treats.tests/Orders/OrderPolicyTests.cs`
+
+**Use when**:
+- Testing reactive behavior across aggregate boundaries
+- Coordinating multi-aggregate processes
+- Implementing sagas and process managers
+- Testing eventual consistency workflows
+
+**Key Differences**:
+- **Command tests**: Focus on single aggregate, test business rules within consistency boundary
+- **Policy tests**: Focus on cross-aggregate coordination, test reactive behavior and command emission
+
+**Infrastructure**:
+- Both test types extend `TestBase` (in `eats_n_treats.tests/Infrastructure/TestBase.cs`)
+- Command tests override `GetCommandHandler()`
+- Policy tests override `get_policy_handler()`
+- Policy implementations extend `PolicyHandler` (in `eats_n_treats.domain/Infrastructure/PolicyHandler.cs`)
 
 # Documentation
 All documentation can be found in .md files

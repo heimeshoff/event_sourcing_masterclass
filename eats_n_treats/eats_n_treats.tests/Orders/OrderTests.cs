@@ -54,7 +54,7 @@ public partial class OrderTests : TestBase
     public void An_item_cannot_be_added_to_an_unplaced_order()
     {
         Given();
-
+        
         When(AddItem(Order1(), Pizza(), 1, 12.99m));
 
         Then(ItemCannotBeAdded(Order1(), Pizza(), "Order must be placed before adding items"));

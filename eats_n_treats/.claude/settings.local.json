@@ -6,7 +6,12 @@
       "Bash(powershell -ExecutionPolicy ByPass -c \"irm https://astral.sh/uv/install.ps1 | iex\")",
       "mcp__serena__get_symbols_overview",
       "mcp__serena__list_dir",
-      "Bash(cat \"C:\\src\\heimeshoff\\event_sourcing_masterclass\\eats_n_treats\\docs\\plans\\vision.md\")"
+      "Bash(cat \"C:\\src\\heimeshoff\\event_sourcing_masterclass\\eats_n_treats\\docs\\plans\\vision.md\")",
+      "mcp__serena__find_symbol",
+      "mcp__serena__find_file",
+      "mcp__serena__find_referencing_symbols",
+      "mcp__serena__search_for_pattern",
+      "mcp__serena__read_memory"
     ],
     "deny": [],
     "ask": []
